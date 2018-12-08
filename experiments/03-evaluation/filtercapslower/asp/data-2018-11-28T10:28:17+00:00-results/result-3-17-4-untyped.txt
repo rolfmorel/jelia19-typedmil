@@ -1,0 +1,3 @@
+f(A,B):-filter(A,B,f).
+f1(A,B):-map(A,B,my_uppercase0).
+f1(A,B):-my_list_to_set19(A,C),my_flatten6(C,B).

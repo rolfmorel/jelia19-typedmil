@@ -1,0 +1,13 @@
+[[p,['V','V','N','A','B','A'],'V']:[list(char),char]:_1010,[p,['R','M','R',n,'X','R','T',q,b],'R']:[list(char),char]:_1028,[p,[a,o,z,z,'U','O',l,o,'Y'],o]:[list(char),char]:_1046,[p,['G',y,'O','Q',d,'G','Q',z],'G']:[list(char),char]:_1064,[p,[u,u,'G',z,y,'I','D','W',d,l],u]:[list(char),char]:_1082,[p,[r,r,'W',s,'A',r,'W'],s]:[list(char),char]:_1106,[p,[a,'F',a,n,'P','E','D','{'],'{']:[list(char),char]:_1124,[p,[u,u,e,'Z',s,c,i],i]:[list(char),char]:_1142,[p,['C',t,'S',e,e,e,y,t],'C']:[list(char),char]:_1160,[p,[t,u,o,i,w,'K','I',w,'J'],'I']:[list(char),char]:_1178]% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-my_head1(A,B),p_1(A,B).
+p(A,B):-my_tail0(A,C),my_head1(C,B).
+p_1(A,B):-my_tail0(A,C),my_element2(C,B).
+%data,time,0.033393
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

@@ -1,0 +1,13 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+%prog,_30
+%data,time,0.540359
+%data,num_clauses,3
+%data,num_well_typed,15
+%data,total_preds,20
+%data,types_enabled,False
+true.
+
+

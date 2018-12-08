@@ -1,0 +1,13 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-p_1(A,C),my_head1(C,B).
+p_1(A,B):-my_msort6(A,C),my_tail0(C,B).
+p_1(A,B):-my_tail0(A,C),p_1(C,B).
+%data,time,1.028129
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+

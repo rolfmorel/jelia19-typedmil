@@ -1,0 +1,11 @@
+[[p,[y,n,'T',g,'L',z,y,'S'],y]:[list(char),char]:_1052,[p,['L','A','Q',r,r,'A','J','E','O','Z'],'A']:[list(char),char]:_1070,[p,['B',a,'N',k,a,'I'],a]:[list(char),char]:_1088,[p,['Y','E','H','D','U','L',v,'E','C',c],'E']:[list(char),char]:_1106,[p,[q,h,q,e,t,'N',h],h]:[list(char),char]:_1124,[p,['[','R','R',g,'V',v],'[']:[list(char),char]:_1148,[p,['X','L',l,'[',w,o,r,'T',w,'F',y],'[']:[list(char),char]:_1166,[p,[m,'W',n,s,l,j,l,d],s]:[list(char),char]:_1184,[p,[b,'Z',w,a,l,z,'B','P',n,a,b],w]:[list(char),char]:_1202,[p,['T',s,x,'Q','C','I',l,x,k,y,'P'],'I']:[list(char),char]:_1220]% learning p/2
+% clauses: 1
+% clauses: 2
+p(A,B):-my_tail0(A,C),my_head1(C,B).
+p(A,B):-my_reverse3(A,C),p(C,B).
+%data,time,0.016370
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

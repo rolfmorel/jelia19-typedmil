@@ -1,0 +1,13 @@
+[[p,[b,w,'W',y,q,'N','M',w],w]:[list(char),char]:_956,[p,['B',w,j,'Z',j],j]:[list(char),char]:_974,[p,['V',v,'N','X',u,'A','V','Q'],'V']:[list(char),char]:_992,[p,[q,n,'Z',n,'P',f],n]:[list(char),char]:_1010,[p,['T','I','X',p,v,u,f,'I'],'I']:[list(char),char]:_1028,[p,['C','A','C','Z','W','P'],'W']:[list(char),char]:_1052,[p,['E',z,'Z','O',x,z,p,y],'Z']:[list(char),char]:_1070,[p,['G','O','S','D','X','S',n,k,u,r,'V'],'X']:[list(char),char]:_1088,[p,['I','K',w,'I','P','R'],'P']:[list(char),char]:_1106,[p,[v,v,w,'L','O','V'],'V']:[list(char),char]:_1124]% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-my_reverse10(A,C),my_last9(C,B).
+p(A,B):-my_element2(A,C),my_tolower7(C,B).
+p(A,B):-my_tail0(A,C),my_head1(C,B).
+%data,time,0.035119
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

@@ -1,0 +1,53 @@
+binary_bg(succ1,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ2,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ3,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ4,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ5,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ6,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ7,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ8,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ9,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(succ10,(int,int),X,Y):-Y=X+1,Y<5000,state(X,int).
+binary_bg(sucker11,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker12,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker13,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker14,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker15,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker16,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker17,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker18,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker19,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+binary_bg(sucker20,(bottom,bottom),X,Y):-Y=X+1,Y<5000,state(X,bottom).
+pred(P,T) :- binary_bg(P,T,_,_).
+pred(P,T) :- skolem(P),meta(_,T,P,_,_).
+pred(P,T) :- pos_ex(P,T,_,_).
+
+{meta(chain,(S,T),P1,P2,P3)} :- 
+  order(P1,P2),order(P1,P3),pred(P2,(S,R)),pred(P3,(R,T)),
+  deduced(P2,(S,R),X,Z),deduced(P3,(R,T),Z,Y).
+deduced(P1,(S,T),X,Y) :-
+  meta(chain,(S,T),P1,P2,P3),
+  deduced(P2,(S,R),X,Z),deduced(P3,(R,T),Z,Y).
+
+deduced(P,T,X,Y) :- binary_bg(P,T,X,Y).
+
+state(X,T) :- pos_ex(_,(T,_),X,_).
+state(X,T) :- neg_ex(_,(T,_),X,_).
+state(Y,T) :- deduced(P,(_,T),_,Y).
+
+pos_ex(f,(int,int),1,0).
+
+:- pos_ex(P,T,X,Y), not deduced(P,T,X,Y).
+:- neg_ex(P,T,X,Y), deduced(P,T,X,Y).
+
+size(3).
+skolem(0).
+skolem(1).
+:- #count{ M,T,P1,P2,P3 : meta(M,T,P1,P2,P3) } != N, size(N).
+order(X,Y) :- skolem(X), binary_bg(Y,_,_,_).
+%order(X,Y) :- skolem(X), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex(X,_,_,_), binary_bg(Y,_,_,_).
+%order(X,Y) :- pos_ex(X,_,_,_), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex(X,_,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+

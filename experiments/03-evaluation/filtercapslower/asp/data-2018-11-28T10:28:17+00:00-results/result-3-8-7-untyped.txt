@@ -1,0 +1,3 @@
+f(A,B):-f1(A,C),my_tail10(C,B).
+f(A,B):-map(A,B,my_tolower1).
+f1(A,B):-map(A,B,my_tolower1).

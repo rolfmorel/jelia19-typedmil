@@ -1,0 +1,3 @@
+f(A,B):-my_tail7(A,C),f1(C,B).
+f(A,B):-my_tail7(A,C),my_len11(C,B).
+f1(A,B):-map(A,B,my_tolower1).

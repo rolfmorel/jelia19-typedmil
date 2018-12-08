@@ -1,0 +1,110 @@
+
+pred(P) :- unary_bg(P,_).
+pred(P) :- binary_bg(P,_,_).
+pred(P) :- ho_bg(P,_,_,_).
+pred(P) :- skolem(P).
+pred(P) :- pos_ex(P,_,_).
+% debug
+%%derived(pred(P)):-
+%%  pred(P),
+%%  &pyDbg["derived",pred(P)]().
+
+deduced(P,X) :- unary_bg(P,X).
+deduced(P,X,Y) :- binary_bg(P,X,Y).
+deduced((P2,P3),X,Y) :- ho_bg(P2,X,Y,P3).
+% debug
+%%derived(deduced(P,X,Y)) :-
+%%  deduced(P,X,Y),
+%%  &pyDbg["derived:",deduced(P,X,Y)]().
+
+state(X) :- pos_ex(_,X,_).
+state(X) :- neg_ex(_,X,_).
+state(TL) :- state((_,TL)). % FIXME: should really be able to get rid of this rule
+state(HD) :- state((HD,_)). % FIXME: should really be able to get rid of this rule
+state(Y) :- deduced(P,_,Y).
+state(X) :- deduced(P,X,_).
+
+:- pos_ex(P,X,Y), not deduced(P,X,Y).
+:- neg_ex(P,X,Y), deduced(P,X,Y).
+
+size(3).
+skolem(0).
+skolem(1).
+:- #count{ M,P1,P2,P3 : meta(M,P1,P2,P3) } != N, size(N).
+order(X,Y) :- skolem(X), binary_bg(Y,_,_).
+order(X,Y) :- skolem(X), ho_bg(Y,_,_,_).
+order(X,Y) :- pos_ex(X,_,_), binary_bg(Y,_,_).
+order(X,Y) :- pos_ex(X,_,_), ho_bg(Y,_,_,_).
+order(X,Y) :- pos_ex(X,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+
+{meta(chain,P1,P2,P3)} :- 
+  order(P1,P2),order(P1,P3),pred(P2),pred(P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+deduced(P1,X,Y) :-
+  meta(chain,P1,P2,P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+% debug
+%%derived(meta(chain,P1,P2,P3)) :- 
+%%  meta(chain,P1,P2,P3),
+%%  &pyDbg["derived chain",meta(chain,P1,P2,P3)]().
+
+{meta(tohigherorder,P1,P2,P3)} :- 
+  order(P1,P2),pred(P2),pred(P3),deduced((P2,P3),_,_).
+deduced(P1,X,Y) :- meta(tohigherorder,P1,P2,P3),deduced((P2,P3),X,Y).
+% debug
+%%derived(meta(tohigherorder,P1,P2,P3)) :- 
+%%  meta(tohigherorder,P1,P2,P3),
+%%  &pyDbg["derived tohigherorder",meta(tohigherorder,P1,P2,P3)]().
+
+unary_bg(my_uppercase0,X):-&pyUppercase[X](),state(X).
+binary_bg(my_tolower1,X,Y) :- &pyToLower[X](Y),state(X).
+
+ho_bg(filter,(),(),P) :- 
+  pred(P).
+ho_bg(filter,(H1,TL1),(H1,TL2),P) :-
+  state((H1,TL1)),
+  deduced(P,H1),
+  ho_bg(filter,TL1,TL2,P),
+  pred(P).
+ho_bg(filter,(H1,TL1),TL2,P) :-
+  state((H1,TL1)),
+  not deduced(P,H1),
+  ho_bg(filter,TL1,TL2,P),
+  pred(P).
+% debug prints
+%derived(ho_bg(filter,(list(S),list(S),u(S)),(),(),P)) :-
+%  ho_bg(filter,(list(S),list(S),u(S)),(),(),P),
+%  &pyDbg["derived ho_bg(filter)",ho_bg(filter,(list(S),list(S),u(S)),(),(),P)]().
+%derived(ho_bg(filter,(list(S),list(S),u(S)),L1,L2,P)) :-
+%  ho_bg(filter,(list(S),list(S),u(S)),L1,L2,P),
+%  &pyDbg["derived ho_bg(filter)",ho_bg(filter,(list(S),list(S),u(S)),L1,L2,P)]().
+
+
+ho_bg(map,(),(),F) :- 
+  pred(F).
+ho_bg(map,(H1,TL1),(H2,TL2),F) :-
+  state((H1,TL1)),
+  state(TL1),
+  ho_bg(map,TL1,TL2,F),
+  deduced(F,H1,H2),
+  pred(F). % FIXME: ty(T)?
+% debug prints
+%%derived(ho_bg(map,(),(),F)) :-
+%%  ho_bg(map,(),(),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(),(),F)]().
+%%derived(ho_bg(map,(H1,TL1),(H2,TL2),F)) :-
+%%  ho_bg(map,(H1,TL1),(H2,TL2),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(H1,TL1),(H2,TL2),F)]().
+
+unary_bg(my_odd4,X):- 1 = X \ 2,state(X),X<10.
+binary_bg(my_msort5,X,Y) :- &pySort[X](Y),state(X).
+binary_bg(my_len6,X,Y) :- &pyLength[X](Y),state(X).
+pos_ex(f,("s",("y",("H",()))),("h",())).
+pos_ex_t(f,(list(char),list(char)),("s",("y",("H",()))),("h",())).
+pos_ex(f,("I",("Y",("V",("S",())))),("i",("y",("v",("s",()))))).
+pos_ex_t(f,(list(char),list(char)),("I",("Y",("V",("S",())))),("i",("y",("v",("s",()))))).
+neg_ex(f,("n",("o",("v",("l",())))),("L",())).
+neg_ex_t(f,(list(char),list(char)),("n",("o",("v",("l",())))),("L",())).
+neg_ex(f,("v",("K",("y",()))),("k",("w",()))).
+neg_ex_t(f,(list(char),list(char)),("v",("K",("y",()))),("k",("w",()))).

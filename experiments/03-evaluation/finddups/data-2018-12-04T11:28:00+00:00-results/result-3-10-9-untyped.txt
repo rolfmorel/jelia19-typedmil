@@ -1,0 +1,13 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-my_reverse12(A,C),p_1(C,B).
+p(A,B):-my_tail0(A,C),my_last5(C,B).
+p_1(A,B):-my_tail0(A,C),my_head1(C,B).
+%data,time,0.050622
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+

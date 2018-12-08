@@ -1,0 +1,9 @@
+% learning p/2
+% clauses: 1
+p(A,B):-my_list_to_set12(A,C),my_head1(C,B).
+%data,time,0.006074
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+

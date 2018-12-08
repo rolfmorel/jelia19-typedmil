@@ -1,0 +1,11 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+p(A,B):-my_head1(A,C),my_tolower8(C,B).
+p(A,B):-my_tail0(A,C),my_head1(C,B).
+%data,time,0.005404
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+

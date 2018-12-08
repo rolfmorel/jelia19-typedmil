@@ -1,0 +1,92 @@
+
+type(int,0).
+type(char,0).
+type(list(T),I):- J + 1 = I, I < 3,type(T,J).
+ty(T) :- type(T,_).
+
+pred(P,T) :- unary_bg(P,T,_).
+pred(P,T) :- binary_bg(P,T,_,_).
+pred(P,T) :- ho_bg(P,T,_,_,_).
+pred(P,T) :- skolem(P),meta(_,T,P,_,_).
+pred(P,T) :- pos_ex_t(P,T,_,_).
+% debug
+%%derived(pred(P,T)):-
+%%  pred(P,T),
+%%  &pyDbg["derived",pred(P,T)]().
+
+deduced(P,u(T),X) :- unary_bg(P,u(T),X).
+deduced(P,T,X,Y) :- binary_bg(P,T,X,Y).
+deduced((P2,P3),(S,T),X,Y) :- ho_bg(P2,(S,T,_),X,Y,P3).
+% debug
+%%derived(deduced(P,T,X,Y)) :-
+%%  deduced(P,T,X,Y),
+%%  &pyDbg["derived:",deduced(P,T,X,Y)]().
+
+state(X,T) :- pos_ex_t(_,(T,_),X,_).
+state(X,T) :- neg_ex(_,(T,_),X,_).
+state(TL,list(T)) :- state((_,TL),list(T)). % FIXME: should really be able to get rid of this rule
+state(HD,T) :- state((HD,_),list(T)). % FIXME: should really be able to get rid of this rule
+state(Y,T) :- deduced(P,(_,T),_,Y).
+state(X,T) :- deduced(P,(T,_),X,_).
+
+:- pos_ex_t(P,T,X,Y), not deduced(P,T,X,Y).
+:- neg_ex_t(P,T,X,Y), deduced(P,T,X,Y).
+
+size(3).
+skolem(0).
+skolem(1).
+:- #count{ M,T,P1,P2,P3 : meta(M,T,P1,P2,P3) } != N, size(N).
+order(X,Y) :- skolem(X), binary_bg(Y,_,_,_).
+order(X,Y) :- skolem(X), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex_t(X,_,_,_), binary_bg(Y,_,_,_).
+order(X,Y) :- pos_ex_t(X,_,_,_), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex_t(X,_,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+
+{meta(chain,(S,T),P1,P2,P3)} :- 
+  order(P1,P2),order(P1,P3),pred(P2,(S,R)),pred(P3,(R,T)),
+  deduced(P2,(S,R),X,Z),deduced(P3,(R,T),Z,Y).
+deduced(P1,(S,T),X,Y) :-
+  meta(chain,(S,T),P1,P2,P3),
+  deduced(P2,(S,R),X,Z),deduced(P3,(R,T),Z,Y).
+% debug
+%%derived(meta(chain,(S,T),P1,P2,P3)) :- 
+%%  meta(chain,(S,T),P1,P2,P3),
+%%  &pyDbg["derived chain",meta(chain,(S,T),P1,P2,P3)]().
+
+{meta(tohigherorder,(S,T),P1,P2,P3)} :- 
+  order(P1,P2),pred(P2,(S,T,R)),pred(P3,R),deduced((P2,P3),(S,T),_,_),
+  ty(S),ty(T).
+deduced(P1,T,X,Y) :- meta(tohigherorder,T,P1,P2,P3),deduced((P2,P3),T,X,Y).
+% debug
+%%derived(meta(tohigherorder,(S,T),P1,P2,P3)) :- 
+%%  meta(tohigherorder,(S,T),P1,P2,P3),
+%%  &pyDbg["derived tohigherorder",meta(tohigherorder,(S,T),P1,P2,P3)]().
+
+binary_bg(my_tail0,(list(T),list(T)),(HD,TL),TL) :- state((HD,TL),list(T)).
+binary_bg(my_reverse1,(list(T),list(T)),X,Y) :- &pyReverse[X](Y),state(X,list(T)),ty(T).
+
+ho_bg(map,(list(S),list(T),(S,T)),(),(),F) :- 
+  pred(F,(S,T)),ty(S),ty(T).
+ho_bg(map,(list(S),list(T),(S,T)),(H1,TL1),(H2,TL2),F) :-
+  state((H1,TL1),list(S)),
+  state(TL1,list(S)),
+  ty(S),ty(T),
+  ho_bg(map,(list(S),list(T),(S,T)),TL1,TL2,F),
+  deduced(F,(S,T),H1,H2),
+  pred(F,(S,T)).
+% debug prints
+%%derived(ho_bg(map,(list(S),list(T),(S,T)),(),(),F)) :-
+%%  ho_bg(map,(list(S),list(T),(S,T)),(),(),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(list(S),list(T),(S,T)),(),(),F)]().
+%%derived(ho_bg(map,(list(S),list(T),(S,T)),(H1,TL1),(H2,TL2),F)) :-
+%%  ho_bg(map,(list(S),list(T),(S,T)),(H1,TL1),(H2,TL2),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(list(S),list(T),(S,T)),(H1,TL1),(H2,TL2),F)]().
+
+binary_bg(my_list_to_set3,(list(T),list(T)),X,Y) :- &pyListToSet[X](Y),state(X,list(T)),ty(T).
+unary_bg(my_odd4,u(int),X):- 1 = X \ 2,state(X,int),X<10.
+binary_bg(my_element5,(list(T),T),X,Y) :- &pyElement[X](Y),state(X,list(T)),ty(T).
+binary_bg(my_pred6,(int,int),X,Y) :- &pyPred[X](Y),state(X,int),X > 0.
+binary_bg(my_succ7,(int,int),X,Y) :- &pySucc[X](Y),state(X,int),X < 10.
+pos_ex(f,(("J",("p",("S",()))),(("K",("l",("N",()))),())),(("J",("p",())),(("K",("l",())),()))).
+pos_ex_t(f,(list(list(char)),list(list(char))),(("J",("p",("S",()))),(("K",("l",("N",()))),())),(("J",("p",())),(("K",("l",())),()))).

@@ -1,0 +1,13 @@
+[[p,1,0]:[int,int]:_196]% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+%prog,_32
+%data,time,0.085735
+%data,num_clauses,3
+%data,num_well_typed,11
+%data,total_preds,20
+%data,types_enabled,True
+true.
+
+

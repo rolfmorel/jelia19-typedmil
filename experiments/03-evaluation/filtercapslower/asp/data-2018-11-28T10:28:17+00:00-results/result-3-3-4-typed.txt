@@ -1,0 +1,3 @@
+f(A,B):-filter(A,B,my_lowercase6).
+f(A,B):-filter(A,B,my_uppercase0).
+f1(A,B):-map(A,B,f).

@@ -1,0 +1,1 @@
+../../metagol-typed/metagol.pl

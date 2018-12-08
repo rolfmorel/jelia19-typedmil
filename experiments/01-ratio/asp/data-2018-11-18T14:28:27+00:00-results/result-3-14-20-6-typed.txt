@@ -1,0 +1,9 @@
+<block>:1:2281-2309: info: atom does not occur in any rule head:
+  neg_ex(#Anon0,(T,#Anon1),X,#Anon2)
+
+<block>:1:2455-2477: info: atom does not occur in any rule head:
+  neg_ex(P,T,X,Y)
+
+real 45.62
+user 44.63
+sys 0.79

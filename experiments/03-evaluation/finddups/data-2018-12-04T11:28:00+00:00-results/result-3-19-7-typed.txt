@@ -1,0 +1,13 @@
+[[p,[i,j,'I','B',c,d,'I','H'],'I']:[list(char),char]:_1028,[p,['G',r,e,l,'I','T',o,r,k],r]:[list(char),char]:_1046,[p,['O','B',g,q,'H','J','A','B'],'B']:[list(char),char]:_1064,[p,[a,l,'E',w,r,d,a,'M'],a]:[list(char),char]:_1082,[p,[j,y,y,j,'W'],j]:[list(char),char]:_1100,[p,[t,'I','A',n,t,y,'V',s],s]:[list(char),char]:_1124,[p,[c,r,e,m,'J',i,'Q','Q'],e]:[list(char),char]:_1142,[p,[z,i,h,z,'K',t,'T',e,z,'C'],i]:[list(char),char]:_1160,[p,['N',j,'N','P','I','Y',x,i,k,e],e]:[list(char),char]:_1178,[p,[a,'H',c,j,'C','N','A','Q','H','Y'],j]:[list(char),char]:_1196]% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-my_reverse18(A,C),p_1(C,B).
+p(A,B):-my_element2(A,C),my_toupper8(C,B).
+p_1(A,B):-my_tail0(A,C),my_head1(C,B).
+%data,time,0.068129
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

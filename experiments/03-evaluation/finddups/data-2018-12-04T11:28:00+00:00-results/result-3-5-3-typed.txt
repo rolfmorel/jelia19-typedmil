@@ -1,0 +1,11 @@
+[[p,[f,d,c,t,'N','F','S',c],c]:[list(char),char]:_968,[p,['C','F',w,a,'X','X'],'X']:[list(char),char]:_986,[p,['F','N','G',h,'S','F'],'F']:[list(char),char]:_1004,[p,['R','N','D','I','R',u],'R']:[list(char),char]:_1022,[p,[f,g,y,'Q',q,'Q'],'Q']:[list(char),char]:_1040,[p,[c,a,r,'W','R',z,'A',d,'F',d,o],'A']:[list(char),char]:_1064,[p,['I','N',z,b,o,z],o]:[list(char),char]:_1082,[p,['U',i,y,h,'H','Y',i,k],y]:[list(char),char]:_1100,[p,[b,'X',y,y,z,'M',n,c],'X']:[list(char),char]:_1118,[p,[n,v,'T',p,'N','E',n,r,z],'T']:[list(char),char]:_1136]% learning p/2
+% clauses: 1
+% clauses: 2
+p(A,B):-my_head1(A,C),my_toupper5(C,B).
+p(A,B):-my_tail0(A,C),my_last4(C,B).
+%data,time,0.005318
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

@@ -1,0 +1,13 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-map(A,B,p_1).
+p_1(A,B):-reverse(A,C),p_2(C,B).
+p_2(A,B):-tail(A,C),reverse(C,B).
+%data,time,0.201967
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+

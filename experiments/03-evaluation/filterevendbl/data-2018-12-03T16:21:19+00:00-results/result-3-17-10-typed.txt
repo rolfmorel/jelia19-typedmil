@@ -1,0 +1,13 @@
+% learning p/2
+% clauses: 1
+% clauses: 2
+% clauses: 3
+p(A,B):-p_1(A,C),p_1(C,B).
+p_1(A,B):-map(A,B,my_double3).
+p_1(A,B):-filter(A,B,my_even2).
+%data,time,0.041509
+%data,num_clauses,3
+%data,types_enabled,True
+true.
+
+

@@ -1,0 +1,51 @@
+binary_bg(succ1,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker2,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker3,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker4,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker5,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker6,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker7,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker8,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker9,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker10,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker11,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker12,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker13,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker14,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker15,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker16,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker17,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker18,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker19,X,Y):-Y=X+1,Y<5000,state(X).
+binary_bg(sucker20,X,Y):-Y=X+1,Y<5000,state(X).
+pred(P) :- binary_bg(P,_,_).
+pred(P) :- skolem(P),meta(_,P,_,_).
+pred(P) :- pos_ex(P,_,_).
+
+{meta(chain,P1,P2,P3)} :- 
+  order(P1,P2),order(P1,P3),pred(P2),pred(P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+deduced(P1,X,Y) :-
+  meta(chain,P1,P2,P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+
+deduced(P,X,Y) :- binary_bg(P,X,Y).
+
+state(X) :- pos_ex(_,X,_).
+state(X) :- neg_ex(_,X,_).
+state(Y) :- deduced(P,_,Y).
+
+pos_ex(f,1,0).
+
+:- pos_ex(P,X,Y), not deduced(P,X,Y).
+:- neg_ex(P,X,Y), deduced(P,X,Y).
+
+size(3).
+skolem(0).
+skolem(1).
+:- #count{ M,P1,P2,P3 : meta(M,P1,P2,P3) } != N, size(N).
+order(X,Y) :- skolem(X), binary_bg(Y,_,_).
+order(X,Y) :- pos_ex(X,_,_), binary_bg(Y,_,_).
+order(X,Y) :- pos_ex(X,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+

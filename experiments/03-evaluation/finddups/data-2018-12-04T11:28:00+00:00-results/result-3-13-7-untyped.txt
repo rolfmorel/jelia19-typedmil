@@ -1,0 +1,9 @@
+% learning p/2
+% clauses: 1
+p(A,B):-my_tail0(A,C),my_last7(C,B).
+%data,time,0.003307
+%data,num_clauses,3
+%data,types_enabled,False
+true.
+
+
