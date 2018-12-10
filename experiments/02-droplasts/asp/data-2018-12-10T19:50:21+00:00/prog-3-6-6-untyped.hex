@@ -1,0 +1,83 @@
+
+binary_bg(tail,(HD,TL),TL) :- state((HD,TL)).
+binary_bg(reverse,X,Y) :- &pyReverse[X](Y),state(X).
+ho_bg(map,(),(),F) :- 
+  pred(F).
+ho_bg(map,(H1,TL1),(H2,TL2),F) :-
+  state((H1,TL1)),
+  state(TL1),
+  ho_bg(map,TL1,TL2,F),
+  deduced(F,H1,H2),
+  pred(F). % FIXME: ty(T)?
+% debug prints
+%%derived(ho_bg(map,(),(),F)) :-
+%%  ho_bg(map,(),(),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(),(),F)]().
+%%derived(ho_bg(map,(H1,TL1),(H2,TL2),F)) :-
+%%  ho_bg(map,(H1,TL1),(H2,TL2),F),
+%%  &pyDbg["derived ho_bg(map)",ho_bg(map,(H1,TL1),(H2,TL2),F)]().
+
+pred(P) :- binary_bg(P,_,_).
+pred(P) :- ho_bg(P,_,_,_).
+pred(P) :- skolem(P).
+pred(P) :- pos_ex(P,_,_).
+% debug
+%%derived(pred(P)):-
+%%  pred(P),
+%%  &pyDbg["derived",pred(P)]().
+
+{meta(tohigherorder,P1,P2,P3)} :- 
+  order(P1,P2),pred(P2),pred(P3),deduced((P2,P3),_,_).
+deduced(P1,X,Y) :- meta(tohigherorder,P1,P2,P3),deduced((P2,P3),X,Y).
+% debug
+%%derived(meta(tohigherorder,P1,P2,P3)) :- 
+%%  meta(tohigherorder,P1,P2,P3),
+%%  &pyDbg["derived tohigherorder",meta(tohigherorder,P1,P2,P3)]().
+
+{meta(chain,P1,P2,P3)} :- 
+  order(P1,P2),order(P1,P3),pred(P2),pred(P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+deduced(P1,X,Y) :-
+  meta(chain,P1,P2,P3),
+  deduced(P2,X,Z),deduced(P3,Z,Y).
+% debug
+%%derived(meta(chain,P1,P2,P3)) :- 
+%%  meta(chain,P1,P2,P3),
+%%  &pyDbg["derived chain",meta(chain,P1,P2,P3)]().
+
+deduced(P,X,Y) :- binary_bg(P,X,Y).
+deduced((P2,P3),X,Y) :- ho_bg(P2,X,Y,P3).
+% debug
+%%derived(deduced(P,X,Y)) :-
+%%  deduced(P,X,Y),
+%%  &pyDbg["derived:",deduced(P,X,Y)]().
+
+state(X) :- pos_ex(_,X,_).
+%state(X) :- neg_ex(_,X,_).
+state(TL) :- state((_,TL)). % FIXME: should really be able to get rid of this rule
+state(HD) :- state((HD,_)). % FIXME: should really be able to get rid of this rule
+state(Y) :- deduced(P,_,Y).
+state(X) :- deduced(P,X,_).
+
+:- pos_ex(P,X,Y), not deduced(P,X,Y).
+%:- neg_ex(P,X,Y), deduced(P,X,Y).
+
+size(3).
+skolem(0).
+skolem(1).
+:- #count{ M,P1,P2,P3 : meta(M,P1,P2,P3) } != N, size(N).
+order(X,Y) :- skolem(X), binary_bg(Y,_,_).
+order(X,Y) :- skolem(X), ho_bg(Y,_,_,_).
+order(X,Y) :- pos_ex(X,_,_), binary_bg(Y,_,_).
+order(X,Y) :- pos_ex(X,_,_), ho_bg(Y,_,_,_).
+order(X,Y) :- pos_ex(X,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+
+binary_bg(my_pred0,X,Y) :- &pyPred[X](Y),state(X),X > 0.
+binary_bg(my_min_list1,X,Y) :- &pyMinlist[X](Y),state(X).
+binary_bg(my_reverse,X,Y) :- &pyReverse[X](Y),state(X).
+binary_bg(my_len3,X,Y) :- &pyLength[X](Y),state(X).
+binary_bg(my_reverse,X,Y) :- &pyReverse[X](Y),state(X).
+binary_bg(my_min_list5,X,Y) :- &pyMinlist[X](Y),state(X).
+pos_ex(f,(("K",("V",("Z",()))),(("B",("x",())),())),(("K",("V",())),(("B",()),()))).
+pos_ex_t(f,(list(list(char)),list(list(char))),(("K",("V",("Z",()))),(("B",("x",())),())),(("K",("V",())),(("B",()),()))).

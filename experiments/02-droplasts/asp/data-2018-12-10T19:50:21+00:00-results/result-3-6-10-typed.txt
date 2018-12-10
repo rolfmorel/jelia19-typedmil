@@ -1,0 +1,3 @@
+f(A,B):-f0(A,C),f0(C,B).
+f0(A,B):-map(A,B,reverse).
+f0(A,B):-map(A,B,tail).

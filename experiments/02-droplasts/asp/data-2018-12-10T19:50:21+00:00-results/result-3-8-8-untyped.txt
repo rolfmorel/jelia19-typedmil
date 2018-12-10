@@ -1,0 +1,3 @@
+f(A,B):-map(A,B,f1).
+f(A,B):-map(A,B,map).
+f1(A,B):-reverse(A,C),my_tail4(C,B).

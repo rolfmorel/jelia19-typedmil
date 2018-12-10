@@ -2,7 +2,7 @@
 
 DATE=$(date --iso-8601=seconds)
 DIR="data-$DATE"
-EXAMPLES=2
+EXAMPLES=1
 CLAUSES=3
 PREDS=10
 TRIALS=10
@@ -11,13 +11,12 @@ mkdir -p $DIR
 for i in $(seq 0 $PREDS); do
     for j in $(seq $TRIALS); do
         python3 gen_test.py $CLAUSES $i $DIR/prog-$CLAUSES-$i-$j-untyped.hex $DIR/prog-$CLAUSES-$i-$j-typed.hex
-	echo 'pos_ex(f,(("a",("b",("c",()))),(("d",("e",("g",()))),())), (("a",("b",())),(("d",("e",())),()))).' >> $DIR/prog-$CLAUSES-$i-$j-untyped.hex
-	echo 'pos_ex_t(f,(list(list(char)),list(list(char))),(("a",("b",("c",()))),(("d",("e",("g",()))),())), (("a",("b",())),(("d",("e",())),()))).'  >> $DIR/prog-$CLAUSES-$i-$j-typed.hex
+	#echo 'pos_ex(f,(("a",("b",("c",()))),(("d",("e",("g",()))),())), (("a",("b",())),(("d",("e",())),()))).' >> $DIR/prog-$CLAUSES-$i-$j-untyped.hex
+	#echo 'pos_ex_t(f,(list(list(char)),list(list(char))),(("a",("b",("c",()))),(("d",("e",("g",()))),())), (("a",("b",())),(("d",("e",())),()))).'  >> $DIR/prog-$CLAUSES-$i-$j-typed.hex
 
-#	echo "print_pos_ex_asp_both(2)." | swipl ../gen_examples.pl 2>/dev/null | grep 'pos_ex' | sed 's/l(/(/gp' -n | tee -a $DIR/prog-$CLAUSES-$i-$j-untyped.hex >> $DIR/prog-$CLAUSES-$i-$j-typed.hex
+	echo "print_pos_ex_asp_both($EXAMPLES)." | swipl gen_examples.pl 2>/dev/null | grep 'pos_ex\|neg_ex' | sed "s/l(/(/g;s/'/\"/gp" -n | tee -a $DIR/prog-$CLAUSES-$i-$j-untyped.hex >> $DIR/prog-$CLAUSES-$i-$j-typed.hex
     done
 done 
-
 
 mkdir -p $DIR-results
 DATATYPED=data-typed-$DATE.csv
