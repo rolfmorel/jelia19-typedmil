@@ -1,6 +1,6 @@
 This repository contains the code used in the experiments for the following paper:
 
-R. Morel, A. Cropper and L. Ong. Typed meta-interpretive learning of logic programs. JELIA 2019. To appear.
+R. Morel, A. Cropper and L. Ong. Typed meta-interpretive learning of logic programs.
 
 # data description
 
@@ -11,6 +11,9 @@ The '.table' files contain means and standard deviations. These files were gener
 
 # Rerunning the experiments
 
-Each subfolder in the experiments directory contains a 'run.bash' script which run the respective experiment. The ASP experiments are in the sub-folders named 'asp'.
+Each subfolder in the experiments directory contains a 'run.bash' script which runs the respective experiment. The ASP experiments are in the sub-folders named 'asp'.
+
+To run the Prolog experiments a Prolog interpreter is needed. As the experiments were run on 'SWI-Prolog', this is recommended interpreter.
+The ASP experiments require the [hexlite](https://github.com/hexhex/hexlite) ASP solver.
 
 Contact rolf.morel@cs.ox.ac.uk with any queries.
