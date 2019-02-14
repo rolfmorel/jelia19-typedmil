@@ -1,0 +1,67 @@
+binary_bg(succ,(int,int),X,Y) :-
+    Y = X + 1,state(X,int).
+binary_bg(tail,(list(T),list(T)),(HD,TL),TL) :-
+    state((HD,TL),list(T)).
+binary_bg(length,(list(T),int),X,Y) :-
+    &pyLength[X](Y),state(X,list(T)).
+binary_bg(reverse,(list(T),list(T)),X,Y) :-
+    &pyReverse[X](Y),state(X,list(T)).
+
+ho_bg(map,(list(S),list(T),(S,T)),(),(),F) :-
+    pred(F,(S,T)),ty(S),ty(T).
+ho_bg(map,(list(S),list(T),(S,T)),(H1,TL1),(H2,TL2),F) :-
+    state((H1,TL1),list(S)),
+    state(TL1,list(S)),
+    ty(S),ty(T),
+    pred(F,(S,T))
+    deduced(F,(S,T),H1,H2),
+    ho_bg(map,(list(S),list(T),(S,T)),TL1,TL2,F).
+
+pred(P,T) :- binary_bg(P,T,_,_).
+pred(P,T) :- ho_bg(P,T,_,_,_).
+pred(P,T) :- skolem(P),meta(_,T,P,_,_).
+pred(P,T) :- pos_ex(P,T,_,_).
+
+{meta(tohigherorder,(S,T),P1,P2,P3)} :-
+    order(P1,P2),
+    pred(P2,(S,T,R)),
+    pred(P3,R),
+    deduced((P2,P3),(S,T),_,_),
+    ty(S),ty(T).
+
+deduced(P1,T,X,Y) :-
+    meta(tohigherorder,T,P1,P2,P3),
+    deduced((P2,P3),T,X,Y).
+
+{meta(chain,(S,T),P1,P2,P3)} :-
+    order(P1,P2),order(P1,P3),
+    pred(P2,(S,R)),pred(P3,(R,T)),
+    deduced(P2,(S,R),X,Z),
+    deduced(P3,(R,T),Z,Y),ty(S),ty(T).
+
+deduced(P1,(S,T),X,Y) :-
+    meta(chain,(S,T),P1,P2,P3),
+    deduced(P2,(S,R),X,Z),
+    deduced(P3,(R,T),Z,Y).
+
+deduced(P,T,X,Y) :- binary_bg(P,T,X,Y).
+deduced((P2,P3),(S,T),X,Y) :- ho_bg(P2,(S,T,_),X,Y,P3).
+
+state(X,T) :- pos_ex(_,(T,_),X,_).
+state(X,T) :- neg_ex(_,(T,_),X,_).
+state(TL,list(T)) :- state((_,TL),list(T)).
+state(HD,T) :- state((HD,_),list(T)).
+state(Y,T) :- deduced(P,(_,T),_,Y).
+state(X,T) :- deduced(P,(T,_),X,_).
+
+order(X,Y) :- skolem(X), binary_bg(Y,_,_,_).
+order(X,Y) :- skolem(X), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex(X,_,_,_), binary_bg(Y,_,_,_).
+order(X,Y) :- pos_ex(X,_,_,_), ho_bg(Y,_,_,_,_).
+order(X,Y) :- pos_ex(X,_,_,_), skolem(Y).
+order(X,Y) :- skolem(X), skolem(Y), X < Y.
+
+:- pos_ex(P,T,X,Y), not deduced(P,T,X,Y).
+:- neg_ex(P,T,X,Y), deduced(P,T,X,Y).
+
+:- #count{ M,P1,P2,P3 : meta(M,T,P1,P2,P3) } != N, size(N).
