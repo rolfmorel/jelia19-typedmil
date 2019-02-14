@@ -17,3 +17,7 @@ To run the Prolog experiments a Prolog interpreter is needed. As the experiments
 The ASP experiments require the [hexlite](https://github.com/hexhex/hexlite) ASP solver.
 
 Contact rolf.morel@cs.ox.ac.uk with any queries.
+
+# Online appendix for HEXMIL<sub>T</sub> encoding 
+
+The file `appendix-HEXMIL_T-encoding.tx` contains the full encoding for typed HEXMIL.
